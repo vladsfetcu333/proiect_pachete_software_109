@@ -36,37 +36,42 @@ section = st.sidebar.radio("Navigati la:",
                             "10. Regresie Multipla"])
 
 st.sidebar.markdown("---")
-st.sidebar.markdown("**Dataset:** [Online Retail II](https://www.kaggle.com/datasets/mashlyn/online-retail-ii-uci)")
-st.sidebar.markdown("**Sursa:** [Kaggle](https://www.kaggle.com/datasets/mashlyn/online-retail-ii-uci)")
+st.sidebar.markdown("**Dataset:** online_retail_project.csv")
+st.sidebar.markdown("**Sursa:** set de date sintetic realist, inclus in proiect")
 
 
 @st.cache_data
 def load_data():
-    try:
-        df = pd.read_excel("online_retail_II.xlsx", sheet_name="Year 2010-2011")
-    except FileNotFoundError:
+    candidate_files = [
+        ("data/online_retail_project.csv", "csv"),
+        ("online_retail_project.csv", "csv"),
+        ("online_retail_II.xlsx", "excel"),
+        ("online_retail_II.csv", "csv"),
+    ]
+
+    loaded = False
+    df = None
+    for path, file_type in candidate_files:
         try:
-            df = pd.read_csv("online_retail_II.csv", encoding='latin-1')
+            if file_type == "excel":
+                df = pd.read_excel(path, sheet_name="Year 2010-2011")
+            else:
+                df = pd.read_csv(path, encoding='utf-8')
+            loaded = True
+            break
+        except UnicodeDecodeError:
+            df = pd.read_csv(path, encoding='latin-1')
+            loaded = True
+            break
         except FileNotFoundError:
-            st.error("Fisierul de date nu a fost gasit! Plasati fisierul 'online_retail_II.xlsx' "
-                     "sau 'online_retail_II.csv' in acelasi director cu aplicatia.")
-            st.stop()
+            continue
+
+    if not loaded:
+        st.error("Fisierul de date nu a fost gasit. Rulati scripts/generate_dataset.py sau plasati "
+                 "data/online_retail_project.csv in directorul proiectului.")
+        st.stop()
 
     df.columns = df.columns.str.strip()
-
-    col_mapping = {
-        'Invoice': 'Invoice',
-        'StockCode': 'StockCode',
-        'Description': 'Description',
-        'Quantity': 'Quantity',
-        'InvoiceDate': 'InvoiceDate',
-        'Price': 'Price',
-        'Customer ID': 'CustomerID',
-        'Country': 'Country'
-    }
-    for old, new in col_mapping.items():
-        if old in df.columns and old != new:
-            df.rename(columns={old: new}, inplace=True)
 
     if 'InvoiceDate' in df.columns:
         df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'], errors='coerce')
@@ -76,7 +81,6 @@ def load_data():
 
     return df
 
-
 df_original = load_data()
 
 
@@ -84,9 +88,10 @@ if section == "1. Prezentare Date":
     st.title("Analiza Performantei unui Magazin Online")
     st.markdown("""
     Acest proiect analizeaza performanta unui **magazin online din Marea Britanie** 
-    specializat pe cadouri si decoratiuni, folosind date reale de tranzactii din perioada 2010-2011.
+    specializat pe cadouri si decoratiuni, folosind un set de date sintetic realist
+    cu tranzactii din perioada 2024-2025.
     
-    **Dataset:** Online Retail II (UCI Machine Learning Repository)
+    **Dataset:** online_retail_project.csv, inclus in directorul `data/`.
     """)
 
     df = df_original.copy()

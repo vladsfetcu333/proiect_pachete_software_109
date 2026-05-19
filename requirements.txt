@@ -9,3 +9,5 @@ statsmodels
 geopandas
 geodatasets
 openpyxl
+python-docx
+reportlab
