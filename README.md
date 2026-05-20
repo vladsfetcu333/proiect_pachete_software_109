@@ -12,10 +12,6 @@ produselor si pietelor externe.
 app.py                                      aplicatia Streamlit
 data/online_retail_project.csv             setul de date inclus
 sas/analiza_magazin_online.sas             partea SAS
-docs/raport_proiect_pachete_software.docx  raport Word
-docs/raport_proiect_pachete_software.pdf   raport PDF
-scripts/generate_dataset.py                regenerare dataset
-scripts/build_report.py                    regenerare raport
 requirements.txt                           dependinte Python
 ```
 
@@ -52,14 +48,7 @@ pip install -r requirements.txt
 ## Rulare aplicatie Streamlit
 
 ```bash
-streamlit run app.py
-```
-
-## Regenerare dataset si raport
-
-```bash
-python scripts/generate_dataset.py
-python scripts/build_report.py
+python -m streamlit run app.py
 ```
 
 ## Rulare SAS
