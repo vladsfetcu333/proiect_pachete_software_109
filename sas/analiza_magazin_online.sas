@@ -6,12 +6,12 @@
    Inainte de rulare, modificati project_path daca proiectul este mutat.
    ========================================================================== */
 
-options nodate nonumber;
+options nodate nonumber dlcreatedir;
 ods graphics on;
 
-%let project_path=C:\Users\Vlad_Sfetcu\Desktop\Pachete_software\proiect_pachete_software;
-%let data_file=&project_path.\data\online_retail_project.csv;
-%let out_path=&project_path.\sas\output;
+%let project_path=%sysget(HOME)/proiect_pachete_software;
+%let data_file=&project_path./data/online_retail_project.csv;
+%let out_path=&project_path./sas/output;
 
 libname out "&out_path.";
 
